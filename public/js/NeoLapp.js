@@ -39,7 +39,7 @@ let lapp = {
                 const xhr = new XMLHttpRequest()
                 // 配置请求信息,参数一是请求的类型,参数二是请求的url,
                 // url前面拼接上proxy代理接口
-                var proxyUrl = '/service/api/proxy?request=' + url;
+                var proxyUrl = url;
                 xhr.open(method, proxyUrl, true)
                 // 如果用户设置了请求头
                 if(headers){
