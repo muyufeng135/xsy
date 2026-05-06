@@ -1,0 +1,219 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.el-form-item__label{
+    font-size: 12px;
+}
+.el-header, .el-footer {
+    width:100%;
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+}
+.el-header{
+    position:fixed;
+    z-index:999;
+}
+.el-image{
+    width:25px !important;
+    height: 15px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.el-divider--horizontal {
+    height: 2px;
+    margin: 5px 0;
+}
+.el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    /* text-align: center; */
+    /* height: 500px; */
+    padding: 0px;
+    padding-top:60px;
+    /*line-height: 160px;*/
+}
+.el-tabs__header{
+    width:100%;
+    background:#E4E7ED;
+    position: fixed;
+    z-index:999;
+}
+.el-tabs__content{
+    padding-top:40px;
+}
+.el-collapse-item__header{
+    padding-left: 5px;
+    background-color: #F2F6FC;
+}
+.el-collapse-item__content{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+}
+.row-bg {
+    padding: 10px 0px;
+    background-color: #f9fafc;
+}
+.el-select-dropdown__item{
+    overflow: visible;
+    height: auto;
+}
+.el-input-number--mini{
+    width: 60px;
+}
+.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
+    margin-bottom: 5px;
+}
+.el-form--inline .label_auto  .el-form-item{
+    display:flex;
+    align-items:center;
+    justify-content: flex-end;
+}
+.label_auto .el-form-item__label{
+    padding:0 6px 0 0;
+}
+.label_auto .el-input__icon{
+    width:22px;
+}
+.label_auto .el-select  .el-input__inner{
+    padding:0 14px 0 10px;
+    white-space: nowrap;
+    text-overflow:ellipsis;
+}
+.label_auto .el-input .el-input__inner{
+    padding:0 9px;
+}
+.label_auto .el-input__suffix{
+    right:0;
+}
+.line .el-divider{
+    margin:10px 0;
+}
+.line .el-divider__text{
+    line-height:1;
+}
+.new_input .el-input__inner{
+    border:none;
+    outline:0;
+    background-color:transparent !important;
+    color:#606266 !important;
+}
+.param_bg .el-input__inner{
+    background:#fdeacd;
+}
+.tag_w115{
+    display: inline-block;
+    max-width: 115px;
+    overflow: hidden;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.col_right{
+    clear:both;
+}
+.col_right>.el-form-item{
+    display:flex;
+    align-items:center;
+    justify-content: flex-end;
+}
+.title_flex .el-collapse-item__header{
+    height:auto;
+}
+.title_flex .el-collapse-item__header>div{
+    display:flex;
+    align-items:center;
+}
+.new_transfer{
+    width:100%;
+}
+.new_transfer .el-form-item__content{
+    width:100%;
+    text-align:center;
+}
+.new_transfer .el-transfer-panel{
+    width:320px;
+}
+.new_transfer .el-form-item__content .el-transfer-panel{
+    text-align:left;
+}
+.new_transfer .el-transfer-panel .el-checkbox__label>div{
+    display:flex;
+    align-items:center;
+}
+.new_transfer .el-transfer-panel__item:last-of-type{
+    margin-right:30px;
+}
+.do_form{
+    background:#e42d04ab !important;
+}
+.do_form .popper__arrow{
+    border-right-color:#e42d04ab !important;
+    border-left-color:#e42d04ab !important;
+}
+.do_form .popper__arrow::after{
+    border-right-color:#e42d04ab !important;
+    border-left-color:#e42d04ab !important;
+}
+.error .el-input__inner{
+    border:1px solid red;
+    border-color:red !important;
+}
+.error_text{
+    padding-left:10px;
+    color:red;
+    font-size:12px;
+}
+.el-drawer__header{
+    margin-bottom:5px;
+}
+.btn_ccp{
+    padding:5px 10px;
+    border-radius: 2px;
+    background:#fff !important;
+    font-weight:bold;
+    transition: all 0.2s;
+    position:absolute;
+    left:50%;top:50%;
+    transform:translate(-50%,-50%);
+}
+.config_table .el-table__body-wrapper .cell{
+    padding-right:0;
+}
+.drawer .el-collapse-item.is-disabled .el-collapse-item__header i{
+    font-style:inherit;
+    color:#66b1ff;
+}
+.draw_header .el-collapse-item__header{
+    height:60px;
+    line-height:2;
+}
+.el-drawer__body{
+    overflow:auto;
+}
+.el-transfer-panel__item.el-checkbox .el-checkbox__label>div>span{
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.test .el-input{
+    border-radius: 10px;
+    animation: ant 300ms ease-out infinite alternate;
+    animation-iteration-count:3;
+}
+@keyframes ant {
+    0% {
+
+        box-shadow: 0 0 5px rgba(0,0,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 1px 0 #000;
+    }
+    50%{
+        box-shadow: 0 0 10px #66b1ff, inset 0 0 7px #66b1ff, 0 1px 0 #fdeacd;
+    }
+    100% {
+        box-shadow: 0 0 20px #66b1ff, inset 0 0 10px #66b1ff, 0 1px 0 #66b1ff;
+    }
+
+}

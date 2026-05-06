@@ -1,0 +1,499 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="./css/element-ui@2.15.0.css">
+		<style>
+	.option-content {
+      width: 100%;
+      line-height: 1;
+    }
+    /* 主文本样式：加粗，保持默认颜色 */
+   .main-text {
+      display: block; /* 主文本独占一行 */
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .note-text {
+      padding-top:2px;
+      font-size: 11px;
+      display: block;
+      color: #999; /* 浅灰色注释 */
+      white-space: normal; /* 允许换行（默认是 nowrap，会导致长文本溢出） */
+      word-break: break-all; /* 长单词/URL 自动换行 */
+    }
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<el-alert
+					v-if="userAgent=='other'"
+					title="推荐使用谷歌浏览器"
+					style="text-align:center"
+					type="warning">
+			</el-alert>
+		<el-container>
+			<el-main>
+				<table align="center" style="margin-top: 40px;">
+					<tr>
+						<td colspan="4" style="text-align: center;font-weight: bold;font-size: 20px;">请对下面几项内容作出选择</td>
+					</tr>
+					<tr v-show="performOrderFlag">
+						<td>所属执行订单：</td>
+						<td>
+							<el-select v-model="performOrder" placeholder="请选择">
+								<el-option
+										v-for="item in performOrders"
+										:key="item.id"
+										:label="item.po"
+										:value="item.id">
+								</el-option>
+							</el-select>
+						</td>
+					</tr>
+					<tr>
+						<td>Config配置名称:</td>
+						<td colspan="3"><el-input v-model="configName" placeholder="装置名称+机组名称。例如:催化装置富气压缩机"></el-input></td>
+					</tr>
+					<tr>
+						<td>配置类型:</td>
+						<td>
+							<el-select v-model="configType" placeholder="请选择产品类型" :disabled="operateType=='copy'">
+							    <el-option
+							      v-for="item in configTypes"
+							      :key="item.value"
+							      :label="item.label"
+							      :value="item.value">
+							    </el-option>
+							  </el-select>
+						</td>
+						<td>应用系统:</td>
+						<td>
+
+							<el-select v-model="systemType" placeholder="请选择系统类型" :disabled="performOrderFlag">
+								<el-option
+										v-for="item in systemTypes"
+										:key="item.value"
+										:label="item.label"
+										:value="item.value">
+									<div class="option-content">
+										<span class="main-text">{{item.label}}</span>
+										<span class="note-text">{{item.note}}</span>
+									</div>
+								</el-option>
+
+
+							</el-select>
+						</td>
+					</tr>
+					<tr>
+						<td>用户类型:</td>
+						<td>
+							<el-select v-model="customType" placeholder="请选择用户类型" :disabled="operateType=='copy'">
+							    <el-option
+							      v-for="item in customTypes"
+							      :key="item.value"
+							      :label="item.label"
+							      :value="item.value">
+							    </el-option>
+							  </el-select>
+						</td>
+						<td>TsxPlusCPU系列:</td>
+						<td>
+							<el-select style="width: 100%;" v-model="seriesType" :disabled="operateType=='copy'||configType!='TSxPlus'">
+								<el-option
+										v-for="item in seriesTypes"
+										:key="item.value"
+										:label="item.label"
+										:value="item.value">
+								</el-option>
+							</el-select>
+						</td>
+					</tr>
+					<tr>
+						<td>计算逻辑:</td>
+						<td>
+							<el-switch
+									active-text="开"
+									inactive-text="关"
+									v-model="enableCalc">
+							</el-switch>&nbsp;
+							<span style="color:red;font-size:12px">计算逻辑一经设定不允许修改</span>
+						</td>
+						<td v-if="operateType=='copy'">是否复制数值:</td>
+						<td v-if="operateType=='copy'">
+							<el-switch
+									active-text="是"
+									inactive-text="否"
+									v-model="copyNumOr">
+							</el-switch>
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan="4">  <el-button @click="goToConfig" :loading="createLoading" type="primary" style="width:100%;">{{operateType=="copy"?"确认复制":"开始配置"}}</el-button></td>
+					</tr>
+					<tr v-if="operateType=='copy'">
+						<td colspan="4" style="color:red;font-size:12px" align="center">复制完成后请进入到报价及合同下的BOM明细中查看复制结果或进行配置编辑 </td>
+					</tr>
+				</table>
+			</el-main>
+		</el-container>
+		</div>
+		<script type="application/javascript" src="./js/vue.js"></script>
+		<script type="application/javascript" src="./js/elementui.js"></script>
+		<script type="application/javascript" src="./js/axios.js"></script>
+		<script type="application/javascript" src="./js/common.js"></script>
+		<script type="text/javascript" src="./js/NeoLapp.js"></script>
+	</body>
+	<script>
+		var vue= new Vue({
+		   el: '#app',
+			data: {
+				userAgent:'',
+				operateType: '',
+				copyNumOr:false,
+				orderId: '',
+				configId: '',
+				configName: '',
+				configType: '',
+				systemType: '',
+				customType: '',
+				seriesType: '',
+				performOrders:[],
+				performOrder:'',
+				createLoading:false,  //防止重复创建
+				performOrderFlag:false,
+				configTypes: [],
+				customTypes: [
+					{
+						value: '国内客户',
+						label: '国内客户'
+					},
+					{
+						value: '国际客户',
+						label: '国际客户'
+					}],
+				systemTypes: [
+					{
+						value: 'SIS1',
+						label: 'SIS1',
+						note:  'GDS/FGS/简单SIS 包括 储运罐区、码头、装卸站'
+					}, {
+						value: 'SIS2',
+						label: 'SIS2',
+						note:  '除SIS1和SIS3外其他SIS'
+					}, {
+						value: 'SIS3',
+						label: 'SIS3',
+						note:  'BMS、CRCS、DRCS、PDS等顺控项目及 EVA、LDPE、异壬醇等复杂工艺装置SIS'
+					},
+					{
+						value: 'TMC1',
+						label: 'TMC1',
+						note:  '常规机组'
+					}, {
+						value: 'TMC2',
+						label: 'TMC2',
+						note:  '乙烯三机，CO2，催化三四机组、燃机、DEH'
+					}, {
+						value: 'iMEC',
+						label: 'iMEC'
+					}],
+				seriesTypes: [
+				],
+				token: '',
+				enableCalc:true
+			},
+			mounted(){
+		   	     this.filterBrowser()
+		   		if(getQueryString('operateType')=='copy'){
+					this.operateType='copy'
+				}else{
+		   			this.operateType=''
+				}
+				queryConfigTypeOptions();
+		   		this.orderId=getQueryString("recordId");
+				if(this.operateType=='copy'){
+					this.configId=getQueryString("configId");
+				}
+				this.getParams();
+			},
+		   methods: {
+		   	   filterBrowser(){
+				var userAgent = navigator.userAgent;
+				if (userAgent.indexOf("Chrome") == -1){
+					this.userAgent='other'
+				}
+			},
+			   goToConfig() {
+				debugger;
+
+				   if (vue.$data.performOrderFlag==true && vue.$data.performOrder == '') {
+					   this.$message('请选择所属执行订单');
+					   return;
+				   }
+				   if (vue.$data.configName == '') {
+					   this.$message('配置名称不能为空');
+					   return;
+				   }
+				   if (vue.$data.configType == '') {
+					   this.$message('配置类型不能为空');
+					   return;
+				   }
+				   if (vue.$data.systemType == '') {
+					   this.$message('系统类型不能为空');
+					   return;
+				   }
+				   if (vue.$data.customType == '') {
+					   this.$message('客户类型不能为空');
+					   return;
+				   }
+				   if (vue.$data.configType == 'TSxPlus' && vue.$data.seriesType == '') {
+					   this.$message('TsxPlusCPU系列不能为空');
+					   return;
+				   }else if(vue.$data.configType != 'TSxPlus'){
+					   vue.$data.seriesType ='';
+				   }
+				   let that=this
+				   if(that.createLoading==false){
+					   that.createLoading=true
+						   let config = {
+							   method: 'get',
+							   url: "/rest/data/v2/query?q=select id,name from BomConfig__c where name='"+ vue.$data.configName+"'",
+							   contentType:'application/json'
+						   };
+						   
+						   lapp.connection.invoke(config).then(function(res){
+							   that.createLoading=false
+							   if (res.data && res.data.code == 200) {
+								   if(res.data.result.totalSize==0){
+									   let oId=""
+									   let isPerformOrder=false;
+									   if(vue.$data.performOrderFlag==true && vue.$data.performOrder){
+										   oId=that.performOrder;
+										   isPerformOrder=true;
+									   }else{
+										   oId=that.orderId
+									   }
+									   if(that.operateType=="copy"){
+									   	let bomConfig={};
+										   bomConfig.orderId=oId;
+										   bomConfig.configId=that.configId;
+										   bomConfig.enableAutoCalc=that.enableCalc;
+										   bomConfig.systemType=that.systemType;
+										   bomConfig.configName=that.configName;
+										   bomConfig.copyNumOr=that.copyNumOr;
+										   bomConfig.isPerformOrder=isPerformOrder;
+										   debugger;
+										   let copyConfigParam={
+											   method: 'post',
+											   url: "/rest/data/v2.0/scripts/api/neocrm/bom/copy/ccp",
+											   contentType:'application/json',
+											   data:bomConfig
+										   };
+										   lapp.connection.invoke(copyConfigParam).then(function(response){
+										   	if(response.data&&response.data.code===200){
+												vue.$message.success(response.data.message)
+												window.parent.postMessage(data, '*');//关闭弹窗
+											}else{
+												vue.$message.error(response.data.message);
+											}
+										   });
+									   }else{
+									   	//先进行一个BomConfig信息的保存。等获取到bomConfigId后再进行跳转配置界面
+										   let bomConfig={};
+										   bomConfig.config={};
+										   bomConfig.config.enableAutoCalc__c=that.enableCalc;
+										   bomConfig.config.remoteConfigTitles__c=DEFAULT_REMOTE_NAME;
+										   bomConfig.config.order__c=oId;
+										   bomConfig.config.name=that.configName;
+										   debugger;
+										    let configTypeValue = '';
+										   if(vue.$data.configTypes && vue.$data.configTypes.length > 0){
+											   let configTypeItem = vue.$data.configTypes.find(item => item.value === that.configType);
+											   if(configTypeItem){
+												   configTypeValue = configTypeItem.value;
+											   }
+										   }
+										   bomConfig.config.configType__c=configTypeValue;
+										   bomConfig.config.systemType__c=systemTypeMap[that.systemType];
+										   bomConfig.config.seriesType__c=seriesTypeMap[that.seriesType];
+										   bomConfig.config.customType__c=customTypeMap[that.customType];
+										   bomConfig.items=new Array();
+										   let createConfigParam={
+											   method: 'post',
+											   url: "/rest/data/v2.0/scripts/api/neocrm/bom/save",
+											   contentType:'application/json',
+											   data:bomConfig
+										   };
+										   lapp.connection.invoke(createConfigParam).then(function(response){
+											   if(response.data&&response.data.code===200){
+												   url = "index.html?configId=" + response.data.dataId
+														   + "&operateType=edit"
+														   + "&configName=" + that.configName
+												   var data = {
+													   action: 'close_dialog'
+												   };
+												   window.parent.postMessage(data, '*');//关闭弹窗
+												   window.open(url);
+
+											   }else{
+												   vue.$message.error(response.data.message);
+											   }
+										   });
+
+
+
+									   }
+								   }else{
+									   vue.$message.error('已存在重复名称产品')
+								   }
+							   } else {
+								   vue.$message.error(res.data.msg)
+							   }
+						   })
+					   
+				   }
+			   },
+			   getParams(){
+				   let config = {
+					   method: 'get',
+					   url: '/rest/data/v2.0/scripts/api/neocrm/bom/query/bom?configId='+this.configId,
+					   contentType:'application/json'
+				   }
+				   let that=this
+				
+				   lapp.connection.invoke(config)
+						   .then(function (res) {
+							   if(res.data){
+							   	   if(res.data.config.customType__c==1){
+									   that.customType='国内客户'
+								   }else{
+									   that.customType='国际客户'
+								   }
+							   	   switch (res.data.config.configType__c) {
+										case 1:
+											that.configType='Tricon';
+											break;
+									    case 2:
+											that.configType='TriconCx';
+											break;
+									    case 3:
+											that.configType='TSxPlus';
+										   break;
+								   }
+							   	   switch (res.data.config.seriesType__c) {
+									   case 10:
+										   that.seriesType='TSxPlus黑色';
+										   break;
+									   case 11:
+										   that.seriesType='TSxPlus灰色';
+										   break;
+									   case 12:
+										   that.seriesType='TSxPlusSY';
+										   break;
+									   case 13:
+										   that.seriesType='EDPF';
+										   break;
+								   }
+								   switch (res.data.config.systemType__c) {
+									   case 1:
+										   that.systemType = "SIS1";
+										   break;
+									   case 2:
+										   that.systemType = "SIS3";
+										   break;
+									   case 3:
+										   that.systemType = "TMC1";
+										   break;
+									   case 4:
+										   that.systemType = "DEH";
+										   break;
+									   case 5:
+										   that.systemType = "TMC2";
+										   break;
+									   case 6:
+										   that.systemType = "iMEC";
+										   break;
+									   case 7:
+										   that.systemType = "SIS2";
+										   break;
+								   }
+							   }
+							   debugger;
+							   let orderId=getQueryString('recordId')
+							   //查询判断是否是 合同&&框架合同
+							   let rconfig = {
+								   method: 'get',
+								   url: "/rest/data/v2/query?q=select id,customItem215__c,customItem233__c from _order where id="+orderId+" and customItem215__c=2 and customItem233__c=1",
+								   contentType:'application/json'
+							   };
+							   lapp.connection.invoke(rconfig).then(function(res1){
+							   	 if(res1.data && res1.data.code==200){
+							   	 	if(res1.data.result && res1.data.result.records && res1.data.result.records.length){
+							   	 		that.performOrderFlag=true
+											//当是执行订单时不能选择系统
+
+										//查询所属执行订单
+										let oconfig = {
+											method: 'get',
+											url: "/rest/data/v2/query?q=select id,po,approvalStatus from _order where customItem272__c="+orderId+" and customItem215__c=3 limit 0,300",
+											contentType:'application/json'
+										};
+										lapp.connection.invoke(oconfig).then(function(response){
+											that.performOrders=[]
+											if(response.data && response.data.code==200){
+												if(response.data.result && response.data.result.records && response.data.result.records.length){
+													that.performOrders=response.data.result.records.filter(item=>{
+														return (item.approvalStatus!=1 && item.approvalStatus!=3)
+													})
+												}
+											}
+										}).catch(function(err){
+											console.log(err)
+										})
+									}else{
+										that.performOrderFlag=false
+									}
+								 }
+							   })
+
+						   })
+						   .catch(function (error) {
+							   console.log(error);
+						   });
+			   },
+			   queryTsxPlusSeries(){
+		   		let sql="select name from tsxPlusSeries__c";
+				   let rconfig = {
+					   method: 'get',
+					   url: "/rest/data/v2/query?q=select name from tsxPlusSeries__c",
+					   contentType:'application/json'
+				   };
+				   lapp.connection.invoke(rconfig).then(function(res){
+					   if (res.data && res.data.code == 200) {
+						   if(res.data.result.totalSize==0){ //
+							   vue.$message.error('请设置TsxPlus的产品系列');
+							   return false;
+						   }else{
+							  let records=res.data.result.records;
+							  for(i in records){
+							  	console.log(records[i]['name']);
+								  vue.$data.seriesTypes.push({value:records[i]['name'],label:records[i]['name']})
+							  }
+						   }
+					   } else {
+						   vue.$message.error(res.data.msg)
+					   }
+				   });
+
+			   }
+		   }
+		   })
+	</script>
+</html>
