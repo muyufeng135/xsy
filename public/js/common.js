@@ -1230,9 +1230,10 @@ var queryDataSource = function (url, blockId, itemId, isCascade, multiSelect, co
 	return new Promise((resolve, reject) => {
 		let urlMap = {};//等待返回
 		url = urlLocalParamProcess(url);
-		if (getQueryString("userId") != "") {
-			url = url + "&userId=" + getQueryString("userId");
+		if (vue.$data.orderId != "") {
+			url = url + "&orderId=" + vue.$data.orderId;
 		}
+		url = url.replace("https://api-p05.xiaoshouyi.com", "");
 		var config = {
 			method: 'get',
 			url: url,
