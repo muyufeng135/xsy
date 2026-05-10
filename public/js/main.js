@@ -573,13 +573,14 @@ var vue = new Vue({
             }
         },
         numChange(p, val) {   //点数输入框
-            // calcModule1Quantity()
-            debugger
             if (!val) {
                 setItemValue(p, 0)
             }
             if (this.enableAutoCalc == 'false') {
                 return false;
+            }
+            if (p.indexOf('HIQuadX_') === 0) {
+                recalcHIQuadXModulesForNumChange(p)
             }
             let s = ''  //是否远程  ‘Remote'
             let l = ''   //是否复制模块 ’#1.....'
