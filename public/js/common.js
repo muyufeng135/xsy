@@ -6276,4 +6276,14 @@ var queryProductPackage = function (mainProductId) {
 	});
 }
 
+var calcModule1Quantity = function () {
+	var flag = !!getItemValue('HIQuadX_IORedundant');
+	var spare = getItemValue('HIQuadX_IOSpare') / 100;
+	var points = getItemValue('HIQuadX_AIPoints1');
+	var slotCount = getItemInfo('HIQuadX_AnalogInputModule1').slotCount__c;
+	var moduleAdd = getItemValue('HIQuadX_AIModuleADD1');
+	let result = calcMouduleQuantity(flag, points, spare, slotCount, moduleAdd);
+	setItemQuantity("HIQuadX_AnalogInputModule1", result)
+}
+
 

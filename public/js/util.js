@@ -7,11 +7,12 @@
  * @param {number} moduleAdd - 对应 Excel B8 单元格
  * @returns {number}
  */
-function calcMouduleQuantity(flag, pointBuff, spare, inputModule, moduleAdd) {
-    pointBuff = pointBuff || 0;
+function calcMouduleQuantity(flag, points, spare, slotCount, moduleAdd) {
+    debugger
+    points = points || 0;
     spare = spare || 0;
     moduleAdd = moduleAdd || 0;
-    if (!inputModule || inputModule === 0) return 0;
-    var base = Math.ceil(pointBuff * (1 + spare) / inputModule);
+    if (!slotCount || slotCount === 0) return 0;
+    var base = Math.ceil(points * (1 + spare) / slotCount);
     return flag ? base * 2 + moduleAdd : base + moduleAdd;
 }

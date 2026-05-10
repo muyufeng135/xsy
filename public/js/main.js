@@ -129,16 +129,6 @@ var vue = new Vue({
             deep: true
         }
     },
-    computed: {
-        getAnalogInputModule1() {
-            var flag = !!getItemValue('HIQuadX_IORedundant');
-            var pointBuff = getItemValue('HIQuadX_AIPoints1') / 100;
-            var spare = getItemValue('HIQuadX_IOSpare');
-            var inputModule = getItemValue('HIQuadX_AnalogInputModule1');
-            var moduleAdd = getItemValue('HIQuadX_AIModuleADD1');
-            return calcMouduleQuantity(flag, pointBuff, spare, inputModule, moduleAdd);
-        }
-    },
     mounted() {
         console.log(this.configItems)
         console.log(this.configItemRecords)
@@ -583,6 +573,8 @@ var vue = new Vue({
             }
         },
         numChange(p, val) {   //点数输入框
+            // calcModule1Quantity()
+            debugger
             if (!val) {
                 setItemValue(p, 0)
             }
