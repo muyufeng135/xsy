@@ -1145,6 +1145,46 @@ var addDisAbles = function (n) {
 		vue.$data.disables.push(vue.$data.series + 'RemoteSM_Module#' + n)
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 var minusDisAbles = function (n) {
 	vue.$data.seDisables.forEach((item, index) => {
 		if (item.length && (Number(item.substring(item.length - 1)) == n)) {
@@ -1182,6 +1222,46 @@ var remoteStepCopyProcess = function () {
 		defaultDisableArray.push(vue.$data.series + "IOBus_IMFFRemote#" + vue.$data.addNum);
 		defaultDisableArray.push(vue.$data.series + "IOBus_RJ45Cable#" + vue.$data.addNum);
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 
 
@@ -1290,6 +1370,46 @@ var isNumber = function (val) {
 	} else {
 		return false;
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 
 var testParams = function (arr, s, l) {  // numCalc('DIPoints',{m:'DI_Module',e:['DI_ETP','DI_ETP1']},{m:'DI_Module2',e:['DI_ETP2']})
@@ -1638,6 +1758,46 @@ var module2NumChange = function () {
 		})
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 var module1Etp1Change = function () {
 	let params = []
 	for (let i = 0; i < arguments.length; i++) {
@@ -1718,6 +1878,46 @@ var module1Etp1Change = function () {
 			})
 		})
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 var aiSwitchChange = function (p, val) {
 	let s = ''
@@ -1965,10 +2165,90 @@ var aiEtpSelectChange = function (p) {
 		module2NumChange(series + s + 'AI_Module2' + l, series + s + 'AI_ETP2' + l, { m: series + s + 'AI_Module' + l, e: [series + s + 'AI_ETP' + l, series + s + 'AI_ETP1' + l] }, AIPointsStr)
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 var clearNum = function () {
 	for (let i = 0; i < arguments.length; i++) {
 		setItemValue(arguments[i], 0);
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 
 var aoCardCalc = function (p) {
@@ -2228,6 +2508,46 @@ var elco2_calc = function (val, n) {
 		setItemQuantity(coCable2, 0)
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 var FjumperCalc = function (p, val) {
 	let s = ''
 	let l = ''
@@ -2282,6 +2602,46 @@ var TSxModule2num = function (p, val) {
 		setItemQuantity('TSx_' + s + 'PI_ETP' + l, Math.ceil((n - val) * mm / mm2))
 		setItemQuantity('TSx_' + s + 'PI_ETP2' + l, Math.ceil(val * m / m2))
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 /**
  * 本地扩展架计算  Tricon
@@ -2537,6 +2897,46 @@ var Ex_Chassis_Quantity_All_Calc = function () {
 		vue.$message.warning('系统机架之和>15不支持，建议拆分系统');
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 /**
  *远程计算
  * @constructor
@@ -2622,6 +3022,46 @@ var chassis_calc = function (n) {  //远端
 		setItemQuantity(vue.$data.series + 'RemoteIO_Cable' + str, remote_ETP_count)
 		setItemQuantity(vue.$data.series + 'RemoteIO_Cable2' + str, 0)
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 //本地机架相关计算
 var local_calc = function (remoteFlag) {
@@ -2786,6 +3226,46 @@ var BlankSlotPanel_calc = function (p, val) {
 }
 
 /**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
+
+/**
  *远程机架电源的计算
  * @constructor
  */
@@ -2865,6 +3345,46 @@ var Salve_RemoteChassis_calc = function (n) {
 		setItemQuantity(vue.$data.series + 'RemoteIOBus_SFP' + str, Salve_RemoteChassis_Count * 3)
 		setItemQuantity(vue.$data.series + 'RemoteIOBus_FJumper' + str, Salve_RemoteChassis_Count * 3)
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 
 /**
@@ -2974,6 +3494,46 @@ var initDefaultQuantity = function () {
 		}
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 var setDefaultQuantity = function () {
 	//只会设置一次
 	if (vue.$data.enableAutoCalc != 'false') {
@@ -3050,6 +3610,46 @@ var getItemValue = function (itemName) {
 		return vue.$data.itemValues[key];
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 /**
  * 根据ItemName设置对应配置项的value
  * @param itemName
@@ -3072,6 +3672,46 @@ var getItemQuantity = function (itemName) {
 	} else {
 		return 0;
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 /**
  * @param {Object} itemName 根据ItemName获取对应配置项当前值
@@ -3124,6 +3764,46 @@ var setItemQuantity = function (itemName, quantity) {
 		})
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 var getConfigItem = function (itemName) {
 	if (vue.$data.configItemRecords.hasOwnProperty(itemName)) {
 		return vue.$data.configItemRecords[itemName];
@@ -3137,6 +3817,46 @@ var setError = function (itemName, text) {
 		key = key.replace(/itemValue/, "itemError");
 		vue.$set(vue.$data.itemError, key, text)
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 //设置输入框是否禁用
 var setNumDisable = function (itemName, val) {
@@ -4032,6 +4752,46 @@ var saveConfig = function (val) {
 		});
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 /**
  * 查询用户信息，用于判断用户的一级部门是否是【销售中心】
  * @returns {Promise<unknown>}
@@ -4107,6 +4867,46 @@ var queryOrderBomView = function (current) {
 	} else {
 		vue.$message.error('当前配置界面没有可用于预览Bom配置。请先将当前配置进行保存操作');
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 /**
  *
@@ -4242,6 +5042,46 @@ var initDisable = function () {
 			vue.$data.seDisables.push(vue.$data.series + 'Remote' + item)
 		})
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 //安全栅、浪涌等
 var barrier_calc = function (p, p1) {
@@ -4613,6 +5453,46 @@ var averageInputDiscount = function (row, type, arr1) {
 		vue.$data.discounts['softWareDiscount__c'] = (discount).toFixed(4);
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 var averageDiscount = function (type, val, arr, arr1) {  //目标额度输入 计算平均折扣
 	console.info("进入计算折扣点数：" + type)
 	let totalPrice = 0
@@ -4846,6 +5726,46 @@ var priceCalc = function (type, val, arr, arr1) {  //折扣类型、目标额度
 		})
 	}
 }
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
+}
 var priceAllTypeCalc = function () {
 	debugger;
 	this.steps.forEach(every => {
@@ -5003,6 +5923,46 @@ var ioCount = function (type) {
 	} else {  //备用量   输入的点数*备用量    不用乘以数量了
 		return sum
 	}
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 //判断是否是执行订单
 function performOr() {
@@ -5274,6 +6234,46 @@ function queryConfigTypeOptions() {
 			console.log(err);// 打印失败的返回结果
 		}
 	)
+}
+
+/**
+ * 根据主产品ID查询产品包信息
+ * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
+ * @returns {Promise} 返回查询到的records数组
+ */
+var queryProductPackage = function (mainProductId) {
+	return new Promise(function (resolve, reject) {
+		if (!mainProductId) {
+			resolve([]);
+			return;
+		}
+		let param = {};
+		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.useSimpleCode = true;
+		var config = {
+			method: 'post',
+			url: '/rest/data/v2.0/query/xoql',
+			contentType: 'application/x-www-form-urlencoded',
+			data: param
+		};
+		lapp.connection.invoke(config)
+			.then(function (response) {
+				if (response.data && response.data.code === '200') {
+					var result = response.data && response.data.data;
+					if (result.count > 0) {
+						resolve(result.records);
+					} else {
+						resolve([]);
+					}
+				} else {
+					resolve([]);
+				}
+			})
+			.catch(function (error) {
+				console.error('查询产品包发生异常:', error);
+				reject(error);
+			});
+	});
 }
 
 

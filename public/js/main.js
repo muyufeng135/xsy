@@ -1,3 +1,4 @@
+
 var vue = new Vue({
     el: '#app',
     data: {
@@ -48,6 +49,8 @@ var vue = new Vue({
         seriesType: '',
         copyItem: {},
         series: '',
+        activePackageData: [],
+        activePackageVisible: false,
         tcs: {},
         copyInfo: {},
         configSteps: [],//配置步骤
@@ -126,7 +129,19 @@ var vue = new Vue({
             deep: true
         }
     },
+    computed: {
+        getAnalogInputModule1() {
+            var flag = !!getItemValue('HIQuadX_IORedundant');
+            var pointBuff = getItemValue('HIQuadX_AIPoints1') / 100;
+            var spare = getItemValue('HIQuadX_IOSpare');
+            var inputModule = getItemValue('HIQuadX_AnalogInputModule1');
+            var moduleAdd = getItemValue('HIQuadX_AIModuleADD1');
+            return calcMouduleQuantity(flag, pointBuff, spare, inputModule, moduleAdd);
+        }
+    },
     mounted() {
+        console.log(this.configItems)
+        console.log(this.configItemRecords)
         this.filterBrowser();
         if (getQueryString('enableAutoCalc')) {
             this.enableAutoCalc = getQueryString('enableAutoCalc')
@@ -159,6 +174,13 @@ var vue = new Vue({
         }
     },
     methods: {
+        showPackageDetail(productCode) {
+            var that = this;
+            that.activePackageData = [];
+            queryProductPackage(productCode).then(function (records) {
+                that.activePackageData = records || [];
+            });
+        },
         doTable(step) {
             let that = this
             that.$nextTick(() => {

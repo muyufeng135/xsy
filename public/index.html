@@ -360,8 +360,24 @@
                                                             :value="dataItem.value">
                                                             <span style="display: block; font-weight: bold">{{
                                                                 dataItem.label}}
-                                                                <i class="el-icon-goods"
-                                                                    style="color: #409EFF; margin-left: 4px;"></i>
+                                                                <el-popover placement="bottom" width="300"
+                                                                    trigger="click"
+                                                                    v-if="dataItem.productInfo && dataItem.productInfo.isPackageMaster__c && parseFloat(dataItem.productInfo.isPackageMaster__c) >= 0"
+                                                                    @show="showPackageDetail(dataItem.value)">
+                                                                    <i slot="reference" class="el-icon-goods"
+                                                                        style="color: #409eff; margin-left: 4px"></i>
+                                                                    <el-table :data="activePackageData" size="mini"
+                                                                        v-if="activePackageData.length>0">
+                                                                        <el-table-column property="name"
+                                                                            label="名称"></el-table-column>
+                                                                        <el-table-column property="quantity__c"
+                                                                            label="数量" width="80"></el-table-column>
+                                                                    </el-table>
+                                                                    <div v-if="!activePackageData||activePackageData.length==0"
+                                                                        style="text-align: center; color: #999">
+                                                                        暂无产品包信息
+                                                                    </div>
+                                                                </el-popover>
                                                             </span>
 
                                                             <i v-if="dataItem.images!=null&&dataItem.images.length>0"
