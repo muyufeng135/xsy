@@ -165,9 +165,10 @@ var vue = new Vue({
     },
     methods: {
         showPackageDetail(productCode) {
+            
             var that = this;
             that.activePackageData = [];
-            queryProductPackage(productCode).then(function (records) {
+            queryProductPackage('Relay020601').then(function (records) {
                 that.activePackageData = records || [];
             });
         },
@@ -745,6 +746,9 @@ var vue = new Vue({
             if (this.enableAutoCalc == 'false') {
                 return false;
             }
+            if (typeof p === 'string' && p.indexOf('HIQuadX_') === 0) {
+                recalcHIQuadXModulesForSelectChange(p)
+            }
             let s = ''  //是否远程
             let l = ''
             let n = 0
@@ -1022,6 +1026,10 @@ var vue = new Vue({
                 DIPointsStr = this.series + s + 'DI_Points' + l
                 AIPointsStr = this.series + s + 'AI_Points' + l
                 PIPointsStr = this.series + s + 'PI_Points' + l
+            }
+
+            if (this.enableAutoCalc != 'false' && typeof p === 'string' && p.indexOf('HIQuadX_') === 0) {
+                recalcHIQuadXModulesForNumChange(p)
             }
 
             if (p.indexOf('hasTCValue') != -1) {

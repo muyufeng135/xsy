@@ -32,7 +32,7 @@ var queryProductPackage = function (mainProductId) {
 			return;
 		}
 		let param = {};
-		param.xoql = "select id,name,quantity__c from productPackage__c where mainProduct__c=" + mainProductId;
+		param.xoql = "select subProduct__c.name as name ,quantity__c from productPackage__c where masterProductCode__c='" + mainProductId + "'";
 		param.useSimpleCode = true;
 		var config = {
 			method: 'post',
@@ -87,6 +87,44 @@ function isHIQuadXComputedModuleQuantityKey(p) {
 		}
 	}
 	return false;
+}
+
+/**
+ * 解析 HIQuadX 模块类下拉项 name（如 HIQuadX_AnalogInputModule1）为类型码与序号。
+ * @returns {{ typeCode: string, index: string }|null}
+ */
+function parseHIQuadXModuleSelectItemName(p) {
+	if (typeof p !== 'string') {
+		return null;
+	}
+	for (var typeCode in HIQuadX_POINTS_TYPE_TO_MODULE) {
+		if (!HIQuadX_POINTS_TYPE_TO_MODULE.hasOwnProperty(typeCode)) {
+			continue;
+		}
+		var mid = HIQuadX_POINTS_TYPE_TO_MODULE[typeCode];
+		var matched = p.match(new RegExp('^HIQuadX_' + mid + '(\\d+)$'));
+		if (matched) {
+			return { typeCode: typeCode, index: matched[1] };
+		}
+	}
+	return null;
+}
+
+/**
+ * selectChange 专用：模块下拉变更时用当前选中项的 productInfo.slotCount__c（经 getItemInfo）参与计算；
+ * 其它 HIQuadX 下拉与 numChange 规则一致。
+ * @param {string} p item.name
+ */
+function recalcHIQuadXModulesForSelectChange(p) {
+	if (typeof p !== 'string' || p.indexOf('HIQuadX_') !== 0) {
+		return;
+	}
+	var parsed = parseHIQuadXModuleSelectItemName(p);
+	if (parsed) {
+		calcHIQuadXModuleQuantityForTypeIndex(parsed.typeCode, parsed.index);
+		return;
+	}
+	recalcHIQuadXModulesForNumChange(p);
 }
 
 /**
@@ -150,8 +188,9 @@ var calcHIQuadXModuleQuantity = function (p) {
 };
 
 /**
- * numChange 中任一 HIQuadX 相关项变更时调用：除点数外，ModuleADD、IOSpare、IORedundant 等变化也会重算；
- * 未识别的 HIQuadX_ 键则重算全部通道（避免漏项）。
+ * HIQuadX 相关字段变更时重算模块数量：用于 numChange（数量输入）、switchChange（开关）等；
+ * 不含「模块型号下拉」项（见 recalcHIQuadXModulesForSelectChange，避免与 setItemQuantity 联动死循环）。
+ * 除点数外，ModuleADD、IOSpare、IORedundant 等变化也会重算；未识别的 HIQuadX_ 键则重算全部通道（避免漏项）。
  * @param {string} p item.name
  */
 var recalcHIQuadXModulesForNumChange = function (p) {

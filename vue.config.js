@@ -6,7 +6,7 @@ module.exports = {
         changeOrigin: true,
         secure: false,
         headers: {
-          Authorization: 'Bearer 245e0a8efa31abc95ababce15d235f2ed9e82cd3f9d0403d6d7cb19349797ed1.NDEwMDQ1NzE0OTQxODIwNw==0'
+          Authorization: 'Bearer 90c888dfcf7f7693eb68059219274e1e723f55125b1a58d51cbc8b6a4cbb499e.NDEwMDQ1NzE0OTQxODIwNw==0'
         }
       }
     }
