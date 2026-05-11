@@ -50,6 +50,7 @@ var vue = new Vue({
         copyItem: {},
         series: '',
         activePackageData: [],
+        activePackageLoading: false,
         activePackageVisible: false,
         tcs: {},
         copyInfo: {},
@@ -165,11 +166,15 @@ var vue = new Vue({
     },
     methods: {
         showPackageDetail(productCode) {
-            
             var that = this;
+            that.activePackageLoading = true;
             that.activePackageData = [];
             queryPackageItems('Relay020601').then(function (records) {
                 that.activePackageData = records || [];
+            }).catch(function () {
+                that.activePackageData = [];
+            }).then(function () {
+                that.activePackageLoading = false;
             });
         },
         doTable(step) {
