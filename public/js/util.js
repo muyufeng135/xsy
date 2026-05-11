@@ -25,7 +25,7 @@ function calcMouduleQuantity(flag, points, spare, slotCount, moduleAdd, independ
  * @param {String} mainProductId - 主产品ID（productPackage__c的外键mainProduct__c）
  * @returns {Promise} 返回查询到的records数组
  */
-var queryProductPackage = function (mainProductId) {
+var queryPackageItems = function (mainProductId) {
 	return new Promise(function (resolve, reject) {
 		if (!mainProductId) {
 			resolve([]);

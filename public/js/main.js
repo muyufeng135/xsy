@@ -168,7 +168,7 @@ var vue = new Vue({
             
             var that = this;
             that.activePackageData = [];
-            queryProductPackage('Relay020601').then(function (records) {
+            queryPackageItems('Relay020601').then(function (records) {
                 that.activePackageData = records || [];
             });
         },
