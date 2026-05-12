@@ -72,6 +72,44 @@ var HIQuadX_POINTS_TYPE_TO_MODULE = {
 var HIQuadX_RECALC_TYPE_CODES = Object.keys(HIQuadX_POINTS_TYPE_TO_MODULE);
 /** 全局 spare / 冗余变更时，对每类通道最多尝试的序号上限（无物料信息则内部直接 return） */
 var HIQuadX_RECALC_INDEX_MAX = 8;
+/** 扩展机架数量配置项 */
+var HIQuadX_EXTENDED_RACK_NAME = 'HIQuadX_ExtendedRack';
+
+function sumHIQuadXModuleQuantities() {
+	var sum = 0;
+	for (var t = 0; t < HIQuadX_RECALC_TYPE_CODES.length; t++) {
+		var tc = HIQuadX_RECALC_TYPE_CODES[t];
+		var mid = HIQuadX_POINTS_TYPE_TO_MODULE[tc];
+		for (var idx = 1; idx <= HIQuadX_RECALC_INDEX_MAX; idx++) {
+			sum += getItemQuantity('HIQuadX_' + mid + idx);
+		}
+	}
+	return sum;
+}
+
+/**
+ * 所有 HIQuadX 模块数量之和，按扩展机架物料 slotCount 折算为机架数；
+ * flag（HIQuadX_IORedundant）为 true 时：ceil(和 / slotCount) * 2；否则 ceil(和 / slotCount)。
+ */
+function recalcHIQuadXExtendedRack() {
+	if (typeof vue === 'undefined' || !vue || !vue.$data || !vue.$data.itemApiKeys) {
+		return;
+	}
+	if (!vue.$data.itemApiKeys.hasOwnProperty(HIQuadX_EXTENDED_RACK_NAME)) {
+		return;
+	}
+	var flag = !!getItemValue('HIQuadX_IORedundant');
+	var sumMod = sumHIQuadXModuleQuantities();
+	var rackInfo = getItemInfo(HIQuadX_EXTENDED_RACK_NAME);
+	var slotCount = rackInfo && rackInfo.slotCount__c != null ? Number(rackInfo.slotCount__c) : 0;
+	if (!slotCount || slotCount <= 0) {
+		setItemQuantity(HIQuadX_EXTENDED_RACK_NAME, 0);
+		return;
+	}
+	var base = Math.ceil(sumMod / slotCount);
+	var result = flag ? base * 2 : base;
+	setItemQuantity(HIQuadX_EXTENDED_RACK_NAME, result);
+}
 
 function isHIQuadXComputedModuleQuantityKey(p) {
 	if (typeof p !== 'string') {
@@ -119,6 +157,10 @@ function recalcHIQuadXModulesForSelectChange(p) {
 	if (typeof p !== 'string' || p.indexOf('HIQuadX_') !== 0) {
 		return;
 	}
+	if (p === HIQuadX_EXTENDED_RACK_NAME) {
+		recalcHIQuadXExtendedRack();
+		return;
+	}
 	var parsed = parseHIQuadXModuleSelectItemName(p);
 	if (parsed) {
 		calcHIQuadXModuleQuantityForTypeIndex(parsed.typeCode, parsed.index);
@@ -140,7 +182,8 @@ function getHIQuadX2oo3IndependentFlag(typeCode, index) {
 	return !!getItemValue('HIQuadX_' + typeCode + '2oo3IndependentModuleEnable' + index);
 }
 
-function calcHIQuadXModuleQuantityForTypeIndex(typeCode, index) {
+function calcHIQuadXModuleQuantityForTypeIndex(typeCode, index, opts) {
+	opts = opts || {};
 	var moduleMiddle = HIQuadX_POINTS_TYPE_TO_MODULE[typeCode];
 	if (!moduleMiddle) {
 		return;
@@ -160,15 +203,19 @@ function calcHIQuadXModuleQuantityForTypeIndex(typeCode, index) {
 	var independentFlag = getHIQuadX2oo3IndependentFlag(typeCode, index);
 	var result = calcMouduleQuantity(flag, points, spare, slotCount, moduleAdd, independentFlag);
 	setItemQuantity(moduleItemName, result);
+	if (!opts.skipExtendedRack) {
+		recalcHIQuadXExtendedRack();
+	}
 }
 
 function recalcAllHIQuadXModuleQuantities() {
 	for (var t = 0; t < HIQuadX_RECALC_TYPE_CODES.length; t++) {
 		var tc = HIQuadX_RECALC_TYPE_CODES[t];
 		for (var idx = 1; idx <= HIQuadX_RECALC_INDEX_MAX; idx++) {
-			calcHIQuadXModuleQuantityForTypeIndex(tc, String(idx));
+			calcHIQuadXModuleQuantityForTypeIndex(tc, String(idx), { skipExtendedRack: true });
 		}
 	}
+	recalcHIQuadXExtendedRack();
 }
 
 /**
@@ -195,6 +242,9 @@ var calcHIQuadXModuleQuantity = function (p) {
  */
 var recalcHIQuadXModulesForNumChange = function (p) {
 	if (typeof p !== 'string' || p.indexOf('HIQuadX_') !== 0) {
+		return;
+	}
+	if (p === HIQuadX_EXTENDED_RACK_NAME) {
 		return;
 	}
 	if (isHIQuadXComputedModuleQuantityKey(p)) {
