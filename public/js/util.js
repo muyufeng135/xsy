@@ -60,28 +60,28 @@ var queryPackageItems = function (mainProductId) {
 	});
 }
 
-/** HIQuadX 点数项名中的类型码 -> 物料 quantity 项名中的模块段（不含前缀 HIQuadX_ 与末尾序号） */
-var HIQuadX_POINTS_TYPE_TO_MODULE = {
-	AI: 'AnalogInputModule',
-	AO: 'AnalogOutputModule',
-	DI: 'DigitalInputModule',
-	DO: 'DigitalOutputModule',
+/** HIQuadX 点数项名中的类型码 -> 物料 quantity 项名中的模块段（不含前缀 HQX_ 与末尾序号） */
+var HQX_POINTS_TYPE_TO_MODULE = {
+	AI: 'AIModl',
+	AO: 'AOModl',
+	DI: 'DIModl',
+	DO: 'DOModl',
 	CI: 'CounterModule'//特殊修改
 };
 
-var HIQuadX_RECALC_TYPE_CODES = Object.keys(HIQuadX_POINTS_TYPE_TO_MODULE);
+var HQX_RECALC_TYPE_CODES = Object.keys(HQX_POINTS_TYPE_TO_MODULE);
 /** 全局 spare / 冗余变更时，对每类通道最多尝试的序号上限（无物料信息则内部直接 return） */
-var HIQuadX_RECALC_INDEX_MAX = 8;
+var HQX_RECALC_INDEX_MAX = 8;
 /** 扩展机架数量配置项 */
-var HIQuadX_EXTENDED_RACK_NAME = 'HIQuadX_ExtendedRack';
+var HQX_EXTENDED_RACK_NAME = 'HQX_ExtendedRack';
 
 function sumHIQuadXModuleQuantities() {
 	var sum = 0;
-	for (var t = 0; t < HIQuadX_RECALC_TYPE_CODES.length; t++) {
-		var tc = HIQuadX_RECALC_TYPE_CODES[t];
-		var mid = HIQuadX_POINTS_TYPE_TO_MODULE[tc];
-		for (var idx = 1; idx <= HIQuadX_RECALC_INDEX_MAX; idx++) {
-			sum += getItemQuantity('HIQuadX_' + mid + idx);
+	for (var t = 0; t < HQX_RECALC_TYPE_CODES.length; t++) {
+		var tc = HQX_RECALC_TYPE_CODES[t];
+		var mid = HQX_POINTS_TYPE_TO_MODULE[tc];
+		for (var idx = 1; idx <= HQX_RECALC_INDEX_MAX; idx++) {
+			sum += getItemQuantity('HQX_' + mid + idx);
 		}
 	}
 	return sum;
@@ -89,38 +89,38 @@ function sumHIQuadXModuleQuantities() {
 
 /**
  * 所有 HIQuadX 模块数量之和，按扩展机架物料 slotCount 折算为机架数；
- * flag（HIQuadX_IORedundant）为 true 时：ceil(和 / slotCount) * 2；否则 ceil(和 / slotCount)。
+ * flag（HQX_IORedundant）为 true 时：ceil(和 / slotCount) * 2；否则 ceil(和 / slotCount)。
  */
 function recalcHIQuadXExtendedRack() {
 	if (typeof vue === 'undefined' || !vue || !vue.$data || !vue.$data.itemApiKeys) {
 		return;
 	}
-	if (!vue.$data.itemApiKeys.hasOwnProperty(HIQuadX_EXTENDED_RACK_NAME)) {
+	if (!vue.$data.itemApiKeys.hasOwnProperty(HQX_EXTENDED_RACK_NAME)) {
 		return;
 	}
-	var flag = !!getItemValue('HIQuadX_IORedundant');
+	var flag = !!getItemValue('HQX_IORedundant');
 	var sumMod = sumHIQuadXModuleQuantities();
-	var rackInfo = getItemInfo(HIQuadX_EXTENDED_RACK_NAME);
+	var rackInfo = getItemInfo(HQX_EXTENDED_RACK_NAME);
 	var slotCount = rackInfo && rackInfo.slotCount__c != null ? Number(rackInfo.slotCount__c) : 0;
 	if (!slotCount || slotCount <= 0) {
-		setItemQuantity(HIQuadX_EXTENDED_RACK_NAME, 0);
+		setItemQuantity(HQX_EXTENDED_RACK_NAME, 0);
 		return;
 	}
 	var base = Math.ceil(sumMod / slotCount);
 	var result = flag ? base * 2 : base;
-	setItemQuantity(HIQuadX_EXTENDED_RACK_NAME, result);
+	setItemQuantity(HQX_EXTENDED_RACK_NAME, result);
 }
 
 function isHIQuadXComputedModuleQuantityKey(p) {
 	if (typeof p !== 'string') {
 		return false;
 	}
-	for (var k in HIQuadX_POINTS_TYPE_TO_MODULE) {
-		if (!HIQuadX_POINTS_TYPE_TO_MODULE.hasOwnProperty(k)) {
+	for (var k in HQX_POINTS_TYPE_TO_MODULE) {
+		if (!HQX_POINTS_TYPE_TO_MODULE.hasOwnProperty(k)) {
 			continue;
 		}
-		var mid = HIQuadX_POINTS_TYPE_TO_MODULE[k];
-		if (new RegExp('^HIQuadX_' + mid + '\\d+$').test(p)) {
+		var mid = HQX_POINTS_TYPE_TO_MODULE[k];
+		if (new RegExp('^HQX_' + mid + '\\d+$').test(p)) {
 			return true;
 		}
 	}
@@ -128,19 +128,19 @@ function isHIQuadXComputedModuleQuantityKey(p) {
 }
 
 /**
- * 解析 HIQuadX 模块类下拉项 name（如 HIQuadX_AnalogInputModule1）为类型码与序号。
+ * 解析 HIQuadX 模块类下拉项 name（如 HQX_AnalogInputModule1）为类型码与序号。
  * @returns {{ typeCode: string, index: string }|null}
  */
 function parseHIQuadXModuleSelectItemName(p) {
 	if (typeof p !== 'string') {
 		return null;
 	}
-	for (var typeCode in HIQuadX_POINTS_TYPE_TO_MODULE) {
-		if (!HIQuadX_POINTS_TYPE_TO_MODULE.hasOwnProperty(typeCode)) {
+	for (var typeCode in HQX_POINTS_TYPE_TO_MODULE) {
+		if (!HQX_POINTS_TYPE_TO_MODULE.hasOwnProperty(typeCode)) {
 			continue;
 		}
-		var mid = HIQuadX_POINTS_TYPE_TO_MODULE[typeCode];
-		var matched = p.match(new RegExp('^HIQuadX_' + mid + '(\\d+)$'));
+		var mid = HQX_POINTS_TYPE_TO_MODULE[typeCode];
+		var matched = p.match(new RegExp('^HQX_' + mid + '(\\d+)$'));
 		if (matched) {
 			return { typeCode: typeCode, index: matched[1] };
 		}
@@ -154,10 +154,10 @@ function parseHIQuadXModuleSelectItemName(p) {
  * @param {string} p item.name
  */
 function recalcHIQuadXModulesForSelectChange(p) {
-	if (typeof p !== 'string' || p.indexOf('HIQuadX_') !== 0) {
+	if (typeof p !== 'string' || p.indexOf('HQX_') !== 0) {
 		return;
 	}
-	if (p === HIQuadX_EXTENDED_RACK_NAME) {
+	if (p === HQX_EXTENDED_RACK_NAME) {
 		recalcHIQuadXExtendedRack();
 		return;
 	}
@@ -174,27 +174,27 @@ function recalcHIQuadXModulesForSelectChange(p) {
  * @param {string} typeCode AI|AO|DI|DO|CI
  * @param {string} index 数字序号字符串，如 "1"
  */
-/** AI / DI / DO 独立 2oo3 模块开关：HIQuadX_{类型}2oo3IndependentModuleEnable{序号} */
+/** AI / DI / DO 独立 2oo3 模块开关：HQX_{类型}2oo3IndependentModuleEnable{序号} */
 function getHIQuadX2oo3IndependentFlag(typeCode, index) {
 	if (typeCode !== 'AI' && typeCode !== 'DI' && typeCode !== 'DO') {
 		return false;
 	}
-	return !!getItemValue('HIQuadX_' + typeCode + '2oo3IndependentModuleEnable' + index);
+	return !!getItemValue('HQX_' + typeCode + '2oo3IndependentModuleEnable' + index);
 }
 
 /**
- * 与 HIQuadX 槽位模块同序号、同数量：HIQuadX_{类型码}FTA{序号}、HIQuadX_{类型码}CablePlug{序号}。
- * CablePlug 若仅有无序号项（HIQuadX_{类型码}CablePlug），仅在序号为 1 时回退写入，避免多路通道共用一名时被误改。
+ * 与 HIQuadX 槽位模块同序号、同数量：HQX_{类型码}FTA{序号}、HQX_{类型码}CablePlug{序号}。
+ * CablePlug 若仅有无序号项（HQX_{类型码}CablePlug），仅在序号为 1 时回退写入，避免多路通道共用一名时被误改。
  * @param {string} typeCode AI|AO|DI|DO|CI
  * @param {string} index 数字序号字符串
- * @param {number} result 与对应 HIQuadX_{模块段}{序号} 一致的数量
+ * @param {number} result 与对应 HQX_{模块段}{序号} 一致的数量
  */
 function setHIQuadXCablePlugAndFTAQuantityToMatchModule(typeCode, index, result) {
 	if (typeof vue === 'undefined' || !vue || !vue.$data || !vue.$data.itemApiKeys) {
 		return;
 	}
 	var keys = vue.$data.itemApiKeys;
-	var base = 'HIQuadX_' + typeCode;
+	var base = 'HQX_' + typeCode;
 	var ftaName = base + 'FTA' + index;
 	var cableNumbered = base + 'CablePlug' + index;
 	var cableUnnumbered = base + 'CablePlug';
@@ -208,15 +208,15 @@ function setHIQuadXCablePlugAndFTAQuantityToMatchModule(typeCode, index, result)
 
 function calcHIQuadXModuleQuantityForTypeIndex(typeCode, index, opts) {
 	opts = opts || {};
-	var moduleMiddle = HIQuadX_POINTS_TYPE_TO_MODULE[typeCode];
+	var moduleMiddle = HQX_POINTS_TYPE_TO_MODULE[typeCode];
 	if (!moduleMiddle) {
 		return;
 	}
-	var moduleItemName = 'HIQuadX_' + moduleMiddle + index;
-	var pointsKey = 'HIQuadX_' + typeCode + 'Points' + index;
-	var moduleAddKey = 'HIQuadX_' + typeCode + 'ModuleADD' + index;
-	var flag = !!getItemValue('HIQuadX_IORedundant');
-	var spare = getItemValue('HIQuadX_IOSpare') / 100;
+	var moduleItemName = 'HQX_' + moduleMiddle + index;
+	var pointsKey = 'HQX_' + typeCode + 'Points' + index;
+	var moduleAddKey = 'HQX_' + typeCode + 'ModlADD' + index;
+	var flag = !!getItemValue('HQX_IORed');
+	var spare = getItemValue('HQX_IOSpare') / 100;
 	var points = getItemValue(pointsKey);
 	var moduleInfo = getItemInfo(moduleItemName);
 	if (!moduleInfo || moduleInfo.slotCount__c == null) {
@@ -234,9 +234,9 @@ function calcHIQuadXModuleQuantityForTypeIndex(typeCode, index, opts) {
 }
 
 function recalcAllHIQuadXModuleQuantities() {
-	for (var t = 0; t < HIQuadX_RECALC_TYPE_CODES.length; t++) {
-		var tc = HIQuadX_RECALC_TYPE_CODES[t];
-		for (var idx = 1; idx <= HIQuadX_RECALC_INDEX_MAX; idx++) {
+	for (var t = 0; t < HQX_RECALC_TYPE_CODES.length; t++) {
+		var tc = HQX_RECALC_TYPE_CODES[t];
+		for (var idx = 1; idx <= HQX_RECALC_INDEX_MAX; idx++) {
 			calcHIQuadXModuleQuantityForTypeIndex(tc, String(idx), { skipExtendedRack: true });
 		}
 	}
@@ -244,15 +244,15 @@ function recalcAllHIQuadXModuleQuantities() {
 }
 
 /**
- * 根据点数配置项名（如 HIQuadX_AIPoints1）计算对应槽位模块数量并写回。
- * 命名：HIQuadX_{类型}Points{序号} -> HIQuadX_{模块英文}{序号}、HIQuadX_{类型}ModuleADD{序号}
- * @param {string} p 与 numChange 一致的 item.name，须匹配 HIQuadX_(AI|AO|DI|DO|CI)Points\d+
+ * 根据点数配置项名（如 HQX_AIPoints1）计算对应槽位模块数量并写回。
+ * 命名：HQX_{类型}Points{序号} -> HQX_{模块英文}{序号}、HQX_{类型}ModuleADD{序号}
+ * @param {string} p 与 numChange 一致的 item.name，须匹配 HQX_(AI|AO|DI|DO|CI)Points\d+
  */
 var calcHIQuadXModuleQuantity = function (p) {
 	if (typeof p !== 'string') {
 		return;
 	}
-	var matched = p.match(/^HIQuadX_(AI|AO|DI|DO|CI)Points(\d+)$/);
+	var matched = p.match(/^HQX_(AI|AO|DI|DO|CI)Points(\d+)$/);
 	if (!matched) {
 		return;
 	}
@@ -262,34 +262,35 @@ var calcHIQuadXModuleQuantity = function (p) {
 /**
  * HIQuadX 相关字段变更时重算模块数量：用于 numChange（数量输入）、switchChange（开关）等；
  * 不含「模块型号下拉」项（见 recalcHIQuadXModulesForSelectChange，避免与 setItemQuantity 联动死循环）。
- * 除点数外，ModuleADD、IOSpare、IORedundant 等变化也会重算；未识别的 HIQuadX_ 键则重算全部通道（避免漏项）。
+ * 除点数外，ModuleADD、IOSpare、IORedundant 等变化也会重算；未识别的 HQX_ 键则重算全部通道（避免漏项）。
  * @param {string} p item.name
  */
 var recalcHIQuadXModulesForNumChange = function (p) {
-	if (typeof p !== 'string' || p.indexOf('HIQuadX_') !== 0) {
+    debugger
+	if (typeof p !== 'string' || p.indexOf('HQX_') !== 0) {
 		return;
 	}
-	if (p === HIQuadX_EXTENDED_RACK_NAME) {
+	if (p === HQX_EXTENDED_RACK_NAME) {
 		return;
 	}
 	if (isHIQuadXComputedModuleQuantityKey(p)) {
 		return;
 	}
-	if (p === 'HIQuadX_IORedundant' || p === 'HIQuadX_IOSpare') {
+	if (p === 'HQX_IORedundant' || p === 'HQX_IOSpare') {
 		recalcAllHIQuadXModuleQuantities();
 		return;
 	}
-	var mPoints = p.match(/^HIQuadX_(AI|AO|DI|DO|CI)Points(\d+)$/);
+	var mPoints = p.match(/^HQX_(AI|AO|DI|DO|CI)Points(\d+)$/);
 	if (mPoints) {
 		calcHIQuadXModuleQuantityForTypeIndex(mPoints[1], mPoints[2]);
 		return;
 	}
-	var mAdd = p.match(/^HIQuadX_(AI|AO|DI|DO|CI)ModuleADD(\d+)$/);
+	var mAdd = p.match(/^HQX_(AI|AO|DI|DO|CI)ModuleADD(\d+)$/);
 	if (mAdd) {
 		calcHIQuadXModuleQuantityForTypeIndex(mAdd[1], mAdd[2]);
 		return;
 	}
-	var m2oo3 = p.match(/^HIQuadX_(AI|DI|DO)2oo3IndependentModuleEnable(\d+)$/);
+	var m2oo3 = p.match(/^HQX_(AI|DI|DO)2oo3IndependentModuleEnable(\d+)$/);
 	if (m2oo3) {
 		calcHIQuadXModuleQuantityForTypeIndex(m2oo3[1], m2oo3[2]);
 		return;

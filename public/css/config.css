@@ -119,7 +119,7 @@ body{
 .col_right>.el-form-item{
     display:flex;
     align-items:center;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 .title_flex .el-collapse-item__header{
     height:auto;

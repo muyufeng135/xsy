@@ -5,7 +5,9 @@
     <meta charset="utf-8" />
     <title></title>
     <link rel="stylesheet" href="./css/element-ui@2.15.0.css" />
-    <link rel="stylesheet" href="./css/config.css" />
+    <script>
+        document.write('<link rel="stylesheet" href="./css/config.css?v=' + new Date().getTime() + '" />');
+    </script>
 </head>
 
 <body onbeforeunload="checkLeave()">
@@ -55,7 +57,7 @@
                                     <div>{{block.name}}</div>
                                     <el-button type="text" size="mini" :loading="block.colLoading"></el-button>
                                 </div>
-                                <el-form label-suffix=":" label-width="130px" :disabled="configInputAble==false"
+                                <el-form label-suffix=":"  :disabled="configInputAble==false"
                                     :inline="true" label-position="right" size="mini" ref="'configform_'+block.id"
                                     :model="getFormModel(block.id)">
                                     <el-row v-for="(subArray,index) in getItems(block.id)" :key="index"
@@ -166,7 +168,7 @@
                                         </el-col>
                                         <el-col v-for="(item,index) in subArray" :key="index+'_'"
                                             v-if="item.componmentType__c!=7&&item.componmentType__c!=8"
-                                            :span="(subArray[0].componmentType__c==7|| subArray[0].componmentType__c==8)?(index%3==1?4:10):(index%3==0?4:10)"
+                                            :span="(subArray[0].componmentType__c==7|| subArray[0].componmentType__c==8)?(index%3==1?8:8):(index%3==0?4:10)"
                                             :class="[item.isParam__c?'param_bg':'',subArray[0].componmentType__c==7|| subArray[0].componmentType__c==8?(index%3==1?'col_right':''):(index%3==0?'col_right':''),'label_auto']">
                                             <!-- 单行文本框 -->
                                             <el-form-item :required="item.notNull__c"

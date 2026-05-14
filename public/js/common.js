@@ -3416,53 +3416,38 @@ var Master_RemoteChassis_calc = function () {
 var defaultDisableArray = [];
 
 var setDefaultDisable = function () {
-
-	if (vue.$data.enableAutoCalc != 'false') {
-		if (vue.$data.series != 'TSx_') {
-			defaultDisableArray.push(vue.$data.series + "CPU");
+	defaultDisableArray.push('HQX_AIModl1');
+	defaultDisableArray.push('HQX_AICablePlug1');
+	defaultDisableArray.push('HQX_AIFTA1');
+	defaultDisableArray.push('HQX_AIModl2');
+	defaultDisableArray.push('HQX_AICablePlug2');
+	defaultDisableArray.push('HQX_AIFTA2');
+	defaultDisableArray.push('HQX_AOModl1');
+	defaultDisableArray.push('HQX_AOCablePlug1');
+	defaultDisableArray.push('HQX_AOFTA1');
+	defaultDisableArray.push('HQX_AOModl2');
+	defaultDisableArray.push('HQX_AOCablePlug2');
+	defaultDisableArray.push('HQX_AOFTA2');
+	defaultDisableArray.push('HQX_DIModl1');
+	defaultDisableArray.push('HQX_DICablePlug1');
+	defaultDisableArray.push('HQX_DIFTA1');
+	defaultDisableArray.push('HQX_DIModl2');
+	defaultDisableArray.push('HQX_DICablePlug2');
+	defaultDisableArray.push('HQX_DIFTA2');
+	defaultDisableArray.push('HQX_DOModl1');
+	defaultDisableArray.push('HQX_DOCablePlug1');
+	defaultDisableArray.push('HQX_DOFTA1');
+	defaultDisableArray.push('HQX_DOModl2');
+	defaultDisableArray.push('HQX_DOCablePlug2');
+	defaultDisableArray.push('HQX_DOFT2');
+	defaultDisableArray.push('HQX_CounterModl');
+	defaultDisableArray.forEach((name, index, array) => {
+		if (vue.$data.itemApiKeys.hasOwnProperty(name)) {
+			setNumDisable(name, true);
+			name.deleted = true;
 		}
-		defaultDisableArray.push(vue.$data.series + "Main_Chassis");
-		defaultDisableArray.push(vue.$data.series + "Ex_Chassis");
-		defaultDisableArray.push(vue.$data.series + "PS_Module");
-		defaultDisableArray.push(vue.$data.series + "Master_CMRXM");
-		defaultDisableArray.push(vue.$data.series + "Master_RXMChassis");
-		defaultDisableArray.push(vue.$data.series + "IObus_Cable");
-		defaultDisableArray.push(vue.$data.series + "BlankSlotPanel");
-		if (vue.$data.series == 'CX_') {
-			defaultDisableArray.push(vue.$data.series + "BlankSlotPanel1");
-			defaultDisableArray.push(vue.$data.series + "BlankSlotPanel2");
-			defaultDisableArray.push(vue.$data.series + "IOBus_IMSS")
-			defaultDisableArray.push(vue.$data.series + "RemoteBlankSlotPanel2");
-			defaultDisableArray.push(vue.$data.series + "RemoteIOBus_IMSS");
-			defaultDisableArray.push(vue.$data.series + "IOBus_IMFFRemote");
-			defaultDisableArray.push(vue.$data.series + "ExChassis_CMJumper");
-			defaultDisableArray.push(vue.$data.series + "IOBus_IMSSRemote");
-			defaultDisableArray.push('IO_BusFiberSwitch');
-			defaultDisableArray.push(vue.$data.series + 'IOBus_FJumper2');
-			defaultDisableArray.push(vue.$data.series + 'IOBus_RJ45Cable')
-			defaultDisableArray.push(vue.$data.series + 'IOBus_SFP')
-			defaultDisableArray.push(vue.$data.series + 'RemoteIOBus_SFP')
-			defaultDisableArray.push(vue.$data.series + 'RemoteIOBus_RJ45Cable')
-		}
-		defaultDisableArray.push(vue.$data.series + "ELCO_Cable");
-		defaultDisableArray.push(vue.$data.series + "Salve_RemoteChassis");
-		defaultDisableArray.push(vue.$data.series + "RemoteEx_Chassis");
-		defaultDisableArray.push(vue.$data.series + "RemoteIObus_Cable");
-		defaultDisableArray.push(vue.$data.series + "RemoteBlankSlotPanel");
-		defaultDisableArray.push(vue.$data.series + "RemotePS_Module");
-		defaultDisableArray.push(vue.$data.series + "RemoteELCO_Cable");
-		defaultDisableArray.push(vue.$data.series + "Slave_CMRemote");
-
-		defaultDisableArray.forEach((name, index, array) => {
-			if (vue.$data.itemApiKeys.hasOwnProperty(name)) {
-				setNumDisable(name, true);
-				name.deleted = true;
-			}
-		});
-		defaultDisableArray = defaultDisableArray.filter(item => { return !item.deleted });
-
-	}
-
+	});
+	defaultDisableArray = defaultDisableArray.filter(item => { return !item.deleted });
 }
 //默认数量数组，只在界面加载时设定
 var defaultQuantityArray = [];

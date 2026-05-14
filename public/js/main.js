@@ -585,7 +585,7 @@ var vue = new Vue({
             if (this.enableAutoCalc == 'false') {
                 return false;
             }
-            if (p.indexOf('HIQuadX_') === 0) {
+            if (p.indexOf('HQX_') === 0) {
                 recalcHIQuadXModulesForNumChange(p)
             }
             let s = ''  //是否远程  ‘Remote'
