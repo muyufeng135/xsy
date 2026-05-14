@@ -182,6 +182,30 @@ function getHIQuadX2oo3IndependentFlag(typeCode, index) {
 	return !!getItemValue('HIQuadX_' + typeCode + '2oo3IndependentModuleEnable' + index);
 }
 
+/**
+ * 与 HIQuadX 槽位模块同序号、同数量：HIQuadX_{类型码}FTA{序号}、HIQuadX_{类型码}CablePlug{序号}。
+ * CablePlug 若仅有无序号项（HIQuadX_{类型码}CablePlug），仅在序号为 1 时回退写入，避免多路通道共用一名时被误改。
+ * @param {string} typeCode AI|AO|DI|DO|CI
+ * @param {string} index 数字序号字符串
+ * @param {number} result 与对应 HIQuadX_{模块段}{序号} 一致的数量
+ */
+function setHIQuadXCablePlugAndFTAQuantityToMatchModule(typeCode, index, result) {
+	if (typeof vue === 'undefined' || !vue || !vue.$data || !vue.$data.itemApiKeys) {
+		return;
+	}
+	var keys = vue.$data.itemApiKeys;
+	var base = 'HIQuadX_' + typeCode;
+	var ftaName = base + 'FTA' + index;
+	var cableNumbered = base + 'CablePlug' + index;
+	var cableUnnumbered = base + 'CablePlug';
+	setItemQuantity(ftaName, result);
+	if (keys.hasOwnProperty(cableNumbered)) {
+		setItemQuantity(cableNumbered, result);
+	} else if (String(index) === '1' && keys.hasOwnProperty(cableUnnumbered)) {
+		setItemQuantity(cableUnnumbered, result);
+	}
+}
+
 function calcHIQuadXModuleQuantityForTypeIndex(typeCode, index, opts) {
 	opts = opts || {};
 	var moduleMiddle = HIQuadX_POINTS_TYPE_TO_MODULE[typeCode];
@@ -203,6 +227,7 @@ function calcHIQuadXModuleQuantityForTypeIndex(typeCode, index, opts) {
 	var independentFlag = getHIQuadX2oo3IndependentFlag(typeCode, index);
 	var result = calcMouduleQuantity(flag, points, spare, slotCount, moduleAdd, independentFlag);
 	setItemQuantity(moduleItemName, result);
+	setHIQuadXCablePlugAndFTAQuantityToMatchModule(typeCode, index, result);
 	if (!opts.skipExtendedRack) {
 		recalcHIQuadXExtendedRack();
 	}
