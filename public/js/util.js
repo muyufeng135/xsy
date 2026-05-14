@@ -66,7 +66,7 @@ var HIQuadX_POINTS_TYPE_TO_MODULE = {
 	AO: 'AnalogOutputModule',
 	DI: 'DigitalInputModule',
 	DO: 'DigitalOutputModule',
-	CI: 'CIModule'
+	CI: 'CounterModule'//特殊修改
 };
 
 var HIQuadX_RECALC_TYPE_CODES = Object.keys(HIQuadX_POINTS_TYPE_TO_MODULE);
